@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatPrice } from '../../utils/index';
+import { formatPrice } from '../../utils';
 
 import Button from '../UI/Button/Button';
 
@@ -12,17 +12,14 @@ import {
   InfoCard,
 } from './CardsRecomendacionStyled';
 
-const CardRecomendacion = () => {
+const CardRecomendacion = ({ title, img, desc, price }) => {
   return (
     <Card>
-      <CardImg
-        src='https://res.cloudinary.com/dcatzxqqf/image/upload/v1656648456/coding/NucbaZappi/Productos/muzza-mentolada_fmh9at.png'
-        alt='La Aco'
-      />
+      <CardImg src={img} alt={title} />
       <CardText>
-        <CardTitle>La Aco</CardTitle>
-        <InfoCard>Cheta la gorra</InfoCard>
-        <CardPrice>{formatPrice(3000)}</CardPrice>
+        <CardTitle>{title}</CardTitle>
+        <InfoCard>{desc}</InfoCard>
+        <CardPrice>{formatPrice(price)}</CardPrice>
       </CardText>
       <Button onClick={e => e.preventDefault()}>Agregar</Button>
     </Card>

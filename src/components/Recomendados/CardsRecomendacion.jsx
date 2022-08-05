@@ -4,13 +4,15 @@ import CardRecomendacion from './CardRecomendacion';
 
 import { CardsContainer } from './CardsRecomendacionStyled';
 
+import { Recommended } from '../../data';
+
+
 const CardsRecomendacion = () => {
   return (
     <CardsContainer gridLength={4}>
-      <CardRecomendacion />
-      <CardRecomendacion />
-      <CardRecomendacion />
-      <CardRecomendacion />
+      {Recommended.map(recom => (
+        <CardRecomendacion key={recom.id} {...recom} />
+      ))}
     </CardsContainer>
   );
 };
