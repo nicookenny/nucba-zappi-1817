@@ -25,20 +25,26 @@ import {
   TotalStyled,
 } from './ModalCartStyles';
 import { ModalOverlayStyled } from '../NavbarStyles';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleVisibleCart } from '../../../redux/cart/cart-actions';
 
-const ModalCart = ({ hiddenCart, setHiddenCart }) => {
+const ModalCart = () => {
   const navigate = useNavigate();
+  const { visible } = useSelector(state => state.cart);
+  const dispatch = useDispatch();
 
   return (
     <>
-      {!hiddenCart && (
+      {visible && (
         <ModalOverlayStyled
-          onClick={() => setHiddenCart(!hiddenCart)}
-          isHidden={hiddenCart}
+          onClick={() => {
+            dispatch(toggleVisibleCart());
+          }}
+          isHidden={!visible}
         />
       )}
       <AnimatePresence>
-        {!hiddenCart && (
+        {visible && (
           <ContainerStyled
             initial={{ translateX: 600 }}
             animate={{ translateX: 0 }}
@@ -50,7 +56,9 @@ const ModalCart = ({ hiddenCart, setHiddenCart }) => {
               <CloseButtonStyled
                 className='close__modal '
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setHiddenCart(!hiddenCart)}
+                onClick={() => {
+                  dispatch(toggleVisibleCart());
+                }}
               >
                 <MdOutlineClose size='24px' />
               </CloseButtonStyled>

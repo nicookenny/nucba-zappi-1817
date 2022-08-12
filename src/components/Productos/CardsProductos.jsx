@@ -5,33 +5,47 @@ import { ProductosContainer } from './CardsProductosStyles';
 import { ButtonContainerStyled } from '../../pages/Home/HomeStyles';
 
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
+
+const STANDARD_QUANTITY = 8;
 
 const CardsProductos = () => {
+  const [limit, setLimit] = useState(STANDARD_QUANTITY);
+
   const { selectedCategory } = useSelector(state => state.categories);
-  const { products } = useSelector(state => state.products);
+  const { products, total } = useSelector(state => state.products);
 
   return (
     <>
       <ProductosContainer>
         {Object.entries(products).map(([_category, foods]) =>
-          (!selectedCategory || _category === selectedCategory)
-            ? foods.map(food => <CardProducto key={food.id} {...food} />)
+          !selectedCategory || _category === selectedCategory
+            ? foods.map(food =>
+                food.id <= limit || selectedCategory ? (
+                  <CardProducto key={food.id} {...food} />
+                ) : null
+              )
             : []
         )}
       </ProductosContainer>
 
-      <ButtonContainerStyled>
-        <Button
-          onClick={e => e.preventDefault()}
-          secondary='true'
-          disabled='true'
-        >
-          <span>Ver menos</span>
-        </Button>
-        <Button onClick={e => e.preventDefault()} disabled='true'>
-          Ver más
-        </Button>
-      </ButtonContainerStyled>
+      {!selectedCategory && (
+        <ButtonContainerStyled>
+          <Button
+            onClick={e => setLimit(previous => previous - STANDARD_QUANTITY)}
+            secondary='true'
+            disabled={limit <= STANDARD_QUANTITY}
+          >
+            <span>Ver menos</span>
+          </Button>
+          <Button
+            onClick={e => setLimit(previous => previous + STANDARD_QUANTITY)}
+            disabled={limit >= total}
+          >
+            Ver más
+          </Button>
+        </ButtonContainerStyled>
+      )}
     </>
   );
 };

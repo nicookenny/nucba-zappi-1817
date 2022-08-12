@@ -7,7 +7,6 @@ import { CardsContainer } from './CardsRecomendacionStyled';
 
 const CardsRecomendacion = () => {
   const { recommended } = useSelector(state => state.recommended);
-  console.log({ recommended });
 
   return (
     <CardsContainer gridLength={4}>

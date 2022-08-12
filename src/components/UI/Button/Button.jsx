@@ -6,10 +6,12 @@ const Button = ({
   radius = '32',
   secondary,
   disabled = false,
+  type,
   onClick = e => e.preventDefault(),
 }) => {
   return (
     <StyledButton
+      type={type}
       disabled={disabled}
       onClick={onClick}
       secondary={secondary}
