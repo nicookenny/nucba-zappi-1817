@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { formatPrice } from '../../../utils';
 
 import CardProductCheckout from '../../CardProductCheckout/CardProductCheckout';
@@ -16,16 +17,19 @@ import {
 } from './ProductsCheckoutStyles';
 
 const ProductsCheckout = () => {
+  const { items, totalCost } = useSelector(state => state.cart);
   return (
     <ProductosContainerStyled>
       <ProductsTitleStyled>Tu pedido</ProductsTitleStyled>
       <CardsWrapperStyled>
-        <CardProductCheckout />
+        {items.map(item => (
+          <CardProductCheckout key={item.id} {...item} />
+        ))}
       </CardsWrapperStyled>
       <PriceContainerStyled>
         <SubtotalStyled>
           <p>Subtotal</p>
-          <span>{formatPrice(9000)}</span>
+          <span>{formatPrice(totalCost)}</span>
         </SubtotalStyled>
         <EnvioStyled>
           <p>Envío:</p>
@@ -34,7 +38,7 @@ const ProductsCheckout = () => {
         <HrStyled />
         <TotalStyled>
           <p>Total:</p>
-          <PriceTotalStyled>{formatPrice(9000 + 500)}</PriceTotalStyled>
+          <PriceTotalStyled>{formatPrice(totalCost + 500)}</PriceTotalStyled>
         </TotalStyled>
       </PriceContainerStyled>
     </ProductosContainerStyled>

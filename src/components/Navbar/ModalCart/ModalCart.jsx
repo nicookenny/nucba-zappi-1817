@@ -26,12 +26,13 @@ import {
 } from './ModalCartStyles';
 import { ModalOverlayStyled } from '../NavbarStyles';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleVisibleCart } from '../../../redux/cart/cart-actions';
+import { clearCart, toggleVisibleCart } from '../../../redux/cart/cart-actions';
 
 const ModalCart = () => {
   const navigate = useNavigate();
-  const { visible } = useSelector(state => state.cart);
   const dispatch = useDispatch();
+
+  const { visible, items, totalCost } = useSelector(state => state.cart);
 
   return (
     <>
@@ -68,23 +69,27 @@ const ModalCart = () => {
               <TitleStyled>
                 <h1>Tus Productos</h1>
                 <Increase
-                  onClick={e => e.preventDefault()}
+                  onClick={e => dispatch(clearCart())}
                   bgColor='var(--magenta)'
-                  disabled='true'
+                  disabled={!items.length}
                 >
                   <IoMdTrash />
                 </Increase>
               </TitleStyled>
 
               <ProductsWrapperStyled>
-                <ModalCartCard />
+                {items.length ? (
+                  items.map(item => <ModalCartCard key={item.id} {...item} />)
+                ) : (
+                  <p>Si no compras algo, te vamos a matar</p>
+                )}
               </ProductsWrapperStyled>
             </MainContainerStyled>
 
             <PriceContainerStyled>
               <SubtotalStyled>
                 <p>Subtotal:</p>
-                <span>{formatPrice(9000)}</span>
+                <span>{formatPrice(totalCost)}</span>
               </SubtotalStyled>
               <EnvioStyled>
                 <p>Envio</p>
@@ -93,10 +98,16 @@ const ModalCart = () => {
               <hr />
               <TotalStyled>
                 <p>Total:</p>
-                <PriceStyled>{formatPrice(9000 + 500)}</PriceStyled>
+                <PriceStyled>{formatPrice(totalCost + 500)}</PriceStyled>
               </TotalStyled>
               <ButtonContainerStyled>
-                <Submit onClick={() => navigate('/checkout')}>
+                <Submit
+                  disabled={!items.length}
+                  onClick={() => {
+                    dispatch(toggleVisibleCart());
+                    navigate('/checkout');
+                  }}
+                >
                   Iniciar pedido
                 </Submit>
               </ButtonContainerStyled>
