@@ -17,13 +17,14 @@ const app = initializeApp(firebaseConfig);
 
 // FireStore => almacenamiento
 export const firestore = getFirestore(app);
-export const createUserProfile = async userAuthenticated => {
+
+export const getOrCreateUserProfile = async userAuthenticated => {
   const userReference = doc(firestore, `users/${userAuthenticated.uid}`);
 
   const snapshot = await getDoc(userReference);
 
   if (!snapshot.exists()) {
-    const { name, email, photoURL, displayName } = userAuthenticated;
+    const { email, photoURL, displayName } = userAuthenticated;
     try {
       await setDoc(userReference, {
         name: displayName,

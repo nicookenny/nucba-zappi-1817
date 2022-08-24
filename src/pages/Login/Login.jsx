@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import LoginInput from '../../components/UI/LoginInput/LoginInput';
 import Submit from '../../components/UI/Submit/Submit';
@@ -14,12 +14,19 @@ import {
 } from './LoginStyles';
 import { loginInitialValues } from '../../formik/initialValues';
 import { loginValidationSchema } from '../../formik/validationSchema';
-import { createUserProfile, signIn, signInGoogle } from '../../firebase/firebase-utils';
+import {
+  getOrCreateUserProfile,
+  signIn,
+  signInGoogle,
+} from '../../firebase/firebase-utils';
+import { useRedirect } from '../../hooks/useRedirect';
 const ERROR_CODES = {
   WRONG_PASSWORD: 'auth/wrong-password',
   NOT_FOUND_USER: 'auth/user-not-found',
 };
 const Login = () => {
+  const { state } = useLocation();
+  useRedirect(state?.checkout ? '/checkout' : '/');
   return (
     <LoginContainerStyled>
       <h1>Iniciar Sesión</h1>
@@ -30,7 +37,7 @@ const Login = () => {
           const { email, password } = values;
           try {
             const { user } = await signIn(email, password);
-            const response = await createUserProfile(user);
+            const response = await getOrCreateUserProfile(user);
             const data = response.data();
             console.log({ data });
           } catch (error) {

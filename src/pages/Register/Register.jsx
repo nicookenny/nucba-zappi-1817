@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 
 import LoginInput from '../../components/UI/LoginInput/LoginInput';
@@ -13,18 +13,15 @@ import {
 import { registerInitialValues } from '../../formik/initialValues';
 import { registerValidationSchema } from '../../formik/validationSchema';
 import { register, signInGoogle } from '../../firebase/firebase-utils';
-
-/**
-onSubmit
-validationSchema
-initialValues 
-*/
+import { useRedirect } from '../../hooks/useRedirect';
 
 const ERROR_CODES = {
   EMAIL_IN_USE: 'auth/email-already-in-use',
 };
 
 const Register = () => {
+  useRedirect('/');
+
   return (
     <LoginContainerStyled>
       <h1>Crea tu cuenta</h1>

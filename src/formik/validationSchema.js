@@ -23,3 +23,7 @@ export const loginValidationSchema = Yup.object({
     .min(6, 'Mínimo de caracteres: 6')
     .required('Campo Requerido'),
 });
+
+export const forgotPasswordSchema = Yup.object({
+  email: Yup.string().email('Mail no valido').required('Campo Requerido'),
+});
