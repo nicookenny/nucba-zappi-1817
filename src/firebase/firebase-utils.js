@@ -11,7 +11,15 @@ import {
   GoogleAuthProvider,
 } from 'firebase/auth';
 
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  getDocs,
+} from 'firebase/firestore';
+import { ORDER_STATUS } from '../utils';
 
 const app = initializeApp(firebaseConfig);
 
@@ -38,6 +46,38 @@ export const getOrCreateUserProfile = async userAuthenticated => {
   }
 
   return snapshot;
+};
+
+export const createOrderDocument = async order => {
+  const orderReference = doc(
+    firestore,
+    `orders/user/${order.user}/${order.id}`
+  );
+
+  const snapshot = await getDoc(orderReference);
+
+  if (!snapshot.exists()) {
+    try {
+      await setDoc(orderReference, {
+        ...order,
+        createdAt: new Date(),
+        status: ORDER_STATUS.PENDING,
+      });
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  return snapshot;
+};
+
+export const getFirebaseOrders = async userId => {
+  const PATH = `orders/user/${userId}`;
+
+  const collectionReference = collection(firestore, PATH);
+  const { docs } = await getDocs(collectionReference);
+
+  return docs.map(snap => snap.data());
 };
 
 // Auth => autenticación (login, registro, etc)

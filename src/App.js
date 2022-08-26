@@ -7,7 +7,11 @@ import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, getOrCreateUserProfile } from './firebase/firebase-utils';
+import {
+  auth,
+  getFirebaseOrders,
+  getOrCreateUserProfile,
+} from './firebase/firebase-utils';
 import { useDispatch } from 'react-redux';
 import { setCurrentUser } from './redux/user/user-actions';
 
@@ -24,7 +28,6 @@ const onAuthChange = (dispatch, action) => {
 
 function App() {
   const dispatch = useDispatch();
-
   useEffect(() => {
     const unsuscribe = onAuthChange(dispatch, setCurrentUser);
 

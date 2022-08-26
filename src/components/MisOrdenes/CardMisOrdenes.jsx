@@ -1,5 +1,6 @@
 import { formatPrice, formatDate } from '../../utils';
 import OrderStatus from '../UI/OrderStatus/OrderStatus';
+import { Timestamp } from 'firebase/firestore';
 
 import {
   IdStyled,
@@ -9,15 +10,19 @@ import {
   TitleStyled,
 } from './CardMisOrdenesStyles';
 
-const CardMisOrdenes = () => {
+const CardMisOrdenes = ({ totalCost, createdAt, id, status, items }) => {
+  const createdAtDate = new Timestamp(
+    createdAt.seconds,
+    createdAt.nanoseconds
+  ).toDate();
   return (
     <PedidoContainerStyled onClick={e => e.preventDefault()}>
       <TextContainerStyled>
-        <TitleStyled>ID de la orden: 0912</TitleStyled>
-        <IdStyled>Fecha {formatDate(new Date())}hs</IdStyled>
-        <PriceStyled>{formatPrice(3000)}</PriceStyled>
+        <TitleStyled>ID de la orden: {id}</TitleStyled>
+        <IdStyled>Fecha {formatDate(createdAtDate)}hs</IdStyled>
+        <PriceStyled>{formatPrice(totalCost)}</PriceStyled>
       </TextContainerStyled>
-      <OrderStatus status='pending' />
+      <OrderStatus status={status?.toLowerCase()} />
     </PedidoContainerStyled>
   );
 };

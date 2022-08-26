@@ -10,9 +10,21 @@ import {
   MisOrdenesPatternStyled,
   MisOrdenesTitleStyled,
 } from './MisOrdenesStyles';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getOrders } from '../../redux/orders/orders-actions';
 
 const MisOrdenes = () => {
+  const { orders } = useSelector(state => state.orders);
+  const { user } = useSelector(state => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!orders.length) {
+      dispatch(getOrders(user?.id));
+    }
+  }, [user, dispatch]);
 
   return (
     <>
