@@ -9,16 +9,18 @@ import {
   TextContainerStyled,
   TitleStyled,
 } from './CardMisOrdenesStyles';
+import { useNavigate } from 'react-router-dom';
 
-const CardMisOrdenes = ({ totalCost, createdAt, id, status, items }) => {
+const CardMisOrdenes = ({ totalCost, createdAt, id, status }) => {
+  const navigate = useNavigate();
   const createdAtDate = new Timestamp(
     createdAt.seconds,
     createdAt.nanoseconds
   ).toDate();
   return (
-    <PedidoContainerStyled onClick={e => e.preventDefault()}>
+    <PedidoContainerStyled onClick={e => navigate(`/resumen/${id}`)}>
       <TextContainerStyled>
-        <TitleStyled>ID de la orden: {id}</TitleStyled>
+        <TitleStyled>ID de la orden: #{id.slice(0, 7)}</TitleStyled>
         <IdStyled>Fecha {formatDate(createdAtDate)}hs</IdStyled>
         <PriceStyled>{formatPrice(totalCost)}</PriceStyled>
       </TextContainerStyled>

@@ -73,6 +73,7 @@ export const createOrderDocument = async order => {
 
 export const getFirebaseOrders = async userId => {
   const PATH = `orders/user/${userId}`;
+  console.log(PATH);
 
   const collectionReference = collection(firestore, PATH);
   const { docs } = await getDocs(collectionReference);

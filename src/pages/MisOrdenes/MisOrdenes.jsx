@@ -12,19 +12,29 @@ import {
 } from './MisOrdenesStyles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { getOrders } from '../../redux/orders/orders-actions';
+import {
+  clearError,
+  failedGetOrders,
+  getOrders,
+} from '../../redux/orders/orders-actions';
 
 const MisOrdenes = () => {
-  const { orders } = useSelector(state => state.orders);
+  const { orders, error } = useSelector(state => state.orders);
   const { user } = useSelector(state => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!user?.id) {
+      dispatch(failedGetOrders());
+    } else {
+      error && dispatch(clearError());
+    }
+
     if (!orders.length) {
       dispatch(getOrders(user?.id));
     }
-  }, [user, dispatch]);
+  }, [user?.id, orders.length, error, dispatch]);
 
   return (
     <>

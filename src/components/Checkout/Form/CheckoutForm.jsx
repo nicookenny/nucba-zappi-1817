@@ -9,6 +9,7 @@ import { createOrder } from '../../../redux/orders/orders-actions';
 import { SHIPPING_COST } from '../../../utils';
 
 import Input from '../../UI/Input/Input';
+import Loader from '../../UI/Loader/Loader';
 import Submit from '../../UI/Submit/Submit';
 
 import { CheckoutDatosStyled, Formik, Form } from './CheckoutFormStyles';
@@ -25,60 +26,72 @@ const CheckoutForm = () => {
         initialValues={checkoutInitialValues}
         validationSchema={checkoutValidationSchema}
         onSubmit={async values => {
-          const order = {
-            user: user.id,
-            items,
-            totalCost,
-            shippingCost: SHIPPING_COST,
-            shippingInformation: values,
-            id: v4(),
-          };
+          try {
+            const order = {
+              user: user.id,
+              items,
+              totalCost,
+              shippingCost: SHIPPING_COST,
+              shippingInformation: values,
+              id: v4(),
+            };
 
-          dispatch(createOrder(order));
-          navigate('/felicitaciones');
+            await dispatch(createOrder(order));
+
+            navigate('/felicitaciones');
+          } catch (error) {
+            //dispatch error =>
+            alert('Hubo un error al crear la orden');
+          }
         }}
       >
-        <Form>
-          <Input
-            name='name'
-            htmlFor='nombre'
-            type='text'
-            id='nombre'
-            placeholder='Tu nombre'
-          >
-            Nombre
-          </Input>
-          <Input
-            name='cellphone'
-            htmlFor='celular'
-            type='text'
-            id='celular'
-            placeholder='Tu celular'
-          >
-            Celular
-          </Input>
-          <Input
-            name='locality'
-            htmlFor='localidad'
-            type='text'
-            id='localidad'
-            placeholder='Tu localidad'
-          >
-            Localidad
-          </Input>
-          <Input
-            name='address'
-            htmlFor='direccion'
-            type='text'
-            id='dirección'
-            placeholder='Tu dirección'
-          >
-            Dirección
-          </Input>
-          <div>
-            <Submit disabled={!items.length}>Iniciar Pedido</Submit>
-          </div>
-        </Form>
+        {({ isSubmitting }) => (
+          <Form>
+            <Input
+              name='name'
+              htmlFor='nombre'
+              type='text'
+              id='nombre'
+              placeholder='Tu nombre'
+            >
+              Nombre
+            </Input>
+            <Input
+              name='cellphone'
+              htmlFor='celular'
+              type='text'
+              id='celular'
+              placeholder='Tu celular'
+            >
+              Celular
+            </Input>
+            <Input
+              name='locality'
+              htmlFor='localidad'
+              type='text'
+              id='localidad'
+              placeholder='Tu localidad'
+            >
+              Localidad
+            </Input>
+            <Input
+              name='address'
+              htmlFor='direccion'
+              type='text'
+              id='dirección'
+              placeholder='Tu dirección'
+            >
+              Dirección
+            </Input>
+            <div>
+              <Submit
+                disabled={!items.length} // {"uno": 1,"dos":2 } => []
+              >
+                {isSubmitting ? <Loader /> : 'Iniciar Pedido'}
+              </Submit>
+            </div>
+          </Form>
+        )}
       </Formik>
     </CheckoutDatosStyled>
   );
